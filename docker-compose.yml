@@ -1,0 +1,35 @@
+services:
+
+  # DEVELOPMENT SERVICES
+  web-dev:
+    build:
+      context: ./
+      dockerfile: docker/web.dockerfile
+      target: develop
+    image: php-apache:custom-dev
+    ports:
+      - '80:80'
+    profiles:
+      - dev
+    volumes:
+      - ./:/usr/share/www
+
+  # PRODUCTION SERVICES
+  web:
+    build:
+      context: ./
+      dockerfile: docker/web.dockerfile
+      target: publish
+    image: php-apache:custom
+    ports:
+      - '80:80'
+    profiles:
+      - publish
+
+  # DATABASE SERVICE
+  db:
+    environment:
+      - ACCEPT_EULA=Y
+    image: mcr.microsoft.com/mssql/server:2019-CU12-ubuntu-20.04
+    profiles:
+      - data
